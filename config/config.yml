@@ -1,0 +1,27 @@
+app:
+  name: 'go-clean-template'
+  version: '1.0.0'
+
+http:
+  port: '8080'
+
+logger:
+  log_level: 'debug'
+  rollbar_env: 'go-clean-template'
+
+postgres:
+  pool_max: 2
+  pg_url: 'postgres://postgres:nodirbek@localhost:5432/postgres'
+
+redis:
+  redis_host: localhost
+  redis_port: 6379
+  redis_password: ''
+  redis_db: 0
+
+
+casbin:
+  config_file_path: './config/auth.conf'
+  csv_file_path: './config/auth.csv'
+  signing_key: 'dfhdghkglioe'
+  access_token_timeout: 30000
