@@ -22,12 +22,12 @@ import (
 
 // NewRouter -.
 // Swagger spec:
-// @title       Golang dealer APP
-// @description Documentation
+// @title       Farmish APP
+// @description Dostonbek Soliyev, Nodirbek No'monov
 // @version     1.0
 // @host        localhost:8080
 // @BasePath    /v1
-func NewRouter(handler *gin.Engine, l logger.Interface, t usecase.Admin, e *casbin.Enforcer, cfg *config.Config) {
+func NewRouter(handler *gin.Engine, l logger.Interface, t usecase.Animal, e *casbin.Enforcer, cfg *config.Config) {
 	// Options
 	handler.Use(gin.Logger())
 	handler.Use(gin.Recovery())
@@ -50,6 +50,6 @@ func NewRouter(handler *gin.Engine, l logger.Interface, t usecase.Admin, e *casb
 	// Routers
 	h := handler.Group("/v1")
 	{
-		newAdminRoutes(h, t, l)
+		newAnimalRoutes(h, t, l)
 	}
 }

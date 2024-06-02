@@ -45,8 +45,8 @@ func Run(cfg *config.Config) {
 	}
 
 	// Use case
-	adminUseCase := usecase.NewAdminUseCase(
-		repo.NewAdminRepo(pg), cfg, RedisClient,
+	adminUseCase := usecase.NewAnimalUseCase(
+		repo.NewAnimalRepo(pg), cfg, RedisClient,
 		//webapi.New(),
 	)
 

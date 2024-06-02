@@ -1,6 +1,6 @@
 module Farmish
 
-go 1.17
+go 1.22
 
 require (
 	github.com/Eun/go-hit v0.5.23
@@ -12,7 +12,7 @@ require (
 	github.com/golang-migrate/migrate/v4 v4.15.1
 	github.com/ilyakaznacheev/cleanenv v1.2.6
 	github.com/jackc/pgx/v4 v4.14.1
-	github.com/k0kubun/pp v3.0.1+incompatible
+	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.11.0
 	github.com/rs/zerolog v1.26.1
 	github.com/spf13/cast v1.3.0
@@ -60,6 +60,7 @@ require (
 	github.com/joho/godotenv v1.4.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
+	github.com/k0kubun/pp v3.0.1+incompatible // indirect
 	github.com/lann/builder v0.0.0-20180802200727-47ae307949d0 // indirect
 	github.com/lann/ps v0.0.0-20150810152359-62de8c46ede0 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect

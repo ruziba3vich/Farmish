@@ -10,18 +10,19 @@ import (
 //go:generate mockgen -source=interfaces.go -destination=./mocks_test.go -package=usecase_test
 
 type (
-	// Admin -.
-	Admin interface {
-		Login(context.Context, *entity.LoginRequest) (*entity.LoginResponse, error)
+	Animal interface {
+		CreateAnimal(context.Context, *entity.Animal) (*entity.Animal, error)
+		GetAnimalByID(context.Context, string) (*entity.Animal, error)
+		UpdateAnimal(context.Context, *entity.Animal) (*entity.Animal, error)
+		DeleteAnimal(context.Context, string) (*entity.Animal, error)
+		GetAllAnimalsByFields(context.Context, map[string]interface{}) ([]entity.Animal, error)
 	}
 
-	// AdminRepo -.
-	AdminRepo interface {
-		CheckField(context.Context, map[string]interface{}) (bool, error)
+	AnimalRepo interface {
+		CreateAnimal(context.Context, *entity.Animal) (*entity.Animal, error)
+		GetAnimalByID(context.Context, string) (*entity.Animal, error)
+		UpdateAnimal(context.Context, *entity.Animal) (*entity.Animal, error)
+		DeleteAnimal(context.Context, string) (*entity.Animal, error)
+		GetAllAnimalsByFields(context.Context, map[string]interface{}) ([]entity.Animal, error)
 	}
-
-	//TranslationWebAPI -.
-	//TranslationWebAPI interface {
-	//	Translate(entity.Translation) (entity.Translation, error)
-	//}
 )

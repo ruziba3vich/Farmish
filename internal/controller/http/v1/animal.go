@@ -11,49 +11,49 @@ import (
 	"Farmish/pkg/logger"
 )
 
-type adminRoutes struct {
-	t usecase.Admin
+type animalRoutes struct {
+	t usecase.Animal
 	l logger.Interface
 }
 
-func newAdminRoutes(handler *gin.RouterGroup, t usecase.Admin, l logger.Interface) {
-	r := &adminRoutes{t, l}
+func newAnimalRoutes(handler *gin.RouterGroup, t usecase.Animal, l logger.Interface) {
+	r := &animalRoutes{t, l}
 
-	h := handler.Group("/admin")
+	h := handler.Group("/animal")
 	{
-		h.POST("/login", r.Login)
-		//h.POST("/do-translate", r.doTranslate)
+		h.POST("/create", r.CreateAnimal)
 	}
 }
 
-// Login
-// @Summary     Login for admins
-// @Description api for logging  in for admins
-// @ID          admin-login
-// @Tags  	    admin
+// @Summary     Create Animal
+// @Description Api for creating animal
+// @ID          animal-create
+// @Tags  	    animal
 // @Accept      json
 // @Produce     json
 // @Param       request body models.LoginRequest true "Admin credentials for logging in"
 // @Success     200 {object} models.LoginResponse
 // @Failure     500 {object} response
 // @Router      /admin/login [post]
-func (r *adminRoutes) Login(c *gin.Context) {
+func (r *animalRoutes) CreateAnimal(c *gin.Context) {
 	var (
-		body models.LoginRequest
+		body models.CreateAnimalRequest
 	)
 
 	if err := c.ShouldBindJSON(&body); err != nil {
-		r.l.Error(err, "http - v1 - login")
+		r.l.Error(err, "http - v1 - create-animal")
 		errorResponse(c, http.StatusBadRequest, "request body is not matching")
 	}
 
-	response, err := r.t.Login(c.Request.Context(), &entity.LoginRequest{
-		Email:    body.Email,
-		Password: body.Password,
+	response, err := r.t.CreateAnimal(c.Request.Context(), &entity.Animal{
+		ID:       "",
+		Name:     body.Name,
+		Weight:   body.Weight,
+		IsHungry: body.IsHungry,
 	})
 
 	if err != nil {
-		r.l.Error(err, "http - v1 - login")
+		r.l.Error(err, "http - v1 - create-animal")
 		errorResponse(c, http.StatusInternalServerError, "database problems")
 
 		return
