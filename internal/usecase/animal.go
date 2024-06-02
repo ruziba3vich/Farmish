@@ -4,11 +4,9 @@ import (
 	"Farmish/config"
 	"Farmish/internal/entity"
 	"context"
-	"errors"
-
-	"github.com/google/uuid"
 
 	"github.com/go-redis/redis/v8"
+	"github.com/google/uuid"
 )
 
 type AnimalUseCase struct {
@@ -29,30 +27,21 @@ func NewAnimalUseCase(r AnimalRepo, cfg *config.Config, RedisClient *redis.Clien
 
 func (uc *AnimalUseCase) CreateAnimal(ctx context.Context, request *entity.Animal) (*entity.Animal, error) {
 	request.ID = uuid.NewString()
-	response, err := uc.repo.CreateAnimal(ctx, request)
-	if err != nil {
-		return nil, err
-	}
-
-	return response, nil
+	return uc.repo.CreateAnimal(ctx, request)
 }
 
 func (uc *AnimalUseCase) GetAnimalByID(ctx context.Context, id string) (*entity.Animal, error) {
-	//iplement here
-	return nil, errors.New("unimplemented usecase getanimalbyid")
+	return uc.repo.GetAnimalByID(ctx, id)
 }
 
 func (uc *AnimalUseCase) UpdateAnimal(ctx context.Context, request *entity.Animal) (*entity.Animal, error) {
-	//iplement here
-	return nil, errors.New("unimplemented usecase updateanimal")
+	return uc.repo.UpdateAnimal(ctx, request)
 }
 
 func (uc *AnimalUseCase) DeleteAnimal(ctx context.Context, id string) (*entity.Animal, error) {
-	//iplement here
-	return nil, errors.New("unimplemented usecase deleteanimal")
+	return uc.repo.DeleteAnimal(ctx, id)
 }
 
 func (uc *AnimalUseCase) GetAllAnimalsByFields(ctx context.Context, filter map[string]interface{}) ([]entity.Animal, error) {
-	//iplement here
-	return nil, errors.New("unimplemented usecase getallanimalsbyfields")
+	return uc.repo.GetAllAnimalsByFields(ctx, filter)
 }

@@ -1,18 +1,30 @@
 basePath: /v1
 definitions:
-  models.LoginRequest:
+  entity.Animal:
     properties:
-      email:
-        example: dealer@gmail.com
+      animal:
+        example: sheep
         type: string
-      password:
-        example: pass
+      id:
         type: string
+      is_hungry:
+        example: true
+        type: boolean
+      weight:
+        example: 56.9
+        type: number
     type: object
-  models.LoginResponse:
+  models.CreateAnimalRequest:
     properties:
-      access_token:
+      animal:
+        example: sheep
         type: string
+      is_hungry:
+        example: true
+        type: boolean
+      weight:
+        example: 56.9
+        type: number
     type: object
   v1.response:
     properties:
@@ -23,35 +35,67 @@ definitions:
 host: localhost:8080
 info:
   contact: {}
-  description: Documentation
-  title: Golang dealer APP
+  description: Dostonbek Soliyev, Nodirbek No'monov
+  title: Farmish APP
   version: "1.0"
 paths:
-  /admin/login:
+  /animal/create:
     post:
       consumes:
       - application/json
-      description: api for logging  in for admins
-      operationId: admin-login
+      description: Api for creating animal
+      operationId: animal-create
       parameters:
       - description: Admin credentials for logging in
         in: body
         name: request
         required: true
         schema:
-          $ref: '#/definitions/models.LoginRequest'
+          $ref: '#/definitions/models.CreateAnimalRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.LoginResponse'
+            $ref: '#/definitions/entity.Animal'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/v1.response'
-      summary: Login for admins
+      summary: Create Animal
       tags:
-      - admin
+      - animal
+  /animal/update/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Api for updating animal
+      operationId: animal-update
+      parameters:
+      - description: Animal ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Admin credentials for logging in
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateAnimalRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Animal'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/v1.response'
+      summary: Update Animal
+      tags:
+      - animal
 swagger: "2.0"

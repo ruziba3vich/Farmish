@@ -15,9 +15,9 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/admin/login": {
+        "/animal/create": {
             "post": {
-                "description": "api for logging  in for admins",
+                "description": "Api for creating animal",
                 "consumes": [
                     "application/json"
                 ],
@@ -25,10 +25,10 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "admin"
+                    "animal"
                 ],
-                "summary": "Login for admins",
-                "operationId": "admin-login",
+                "summary": "Create Animal",
+                "operationId": "animal-create",
                 "parameters": [
                     {
                         "description": "Admin credentials for logging in",
@@ -36,7 +36,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.LoginRequest"
+                            "$ref": "#/definitions/models.CreateAnimalRequest"
                         }
                     }
                 ],
@@ -44,7 +44,55 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.LoginResponse"
+                            "$ref": "#/definitions/entity.Animal"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/v1.response"
+                        }
+                    }
+                }
+            }
+        },
+        "/animal/update/{id}": {
+            "put": {
+                "description": "Api for updating animal",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "animal"
+                ],
+                "summary": "Update Animal",
+                "operationId": "animal-update",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Animal ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Admin credentials for logging in",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CreateAnimalRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Animal"
                         }
                     },
                     "500": {
@@ -58,24 +106,40 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "models.LoginRequest": {
+        "entity.Animal": {
             "type": "object",
             "properties": {
-                "email": {
+                "animal": {
                     "type": "string",
-                    "example": "dealer@gmail.com"
+                    "example": "sheep"
                 },
-                "password": {
-                    "type": "string",
-                    "example": "pass"
+                "id": {
+                    "type": "string"
+                },
+                "is_hungry": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "weight": {
+                    "type": "number",
+                    "example": 56.9
                 }
             }
         },
-        "models.LoginResponse": {
+        "models.CreateAnimalRequest": {
             "type": "object",
             "properties": {
-                "access_token": {
-                    "type": "string"
+                "animal": {
+                    "type": "string",
+                    "example": "sheep"
+                },
+                "is_hungry": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "weight": {
+                    "type": "number",
+                    "example": 56.9
                 }
             }
         },
@@ -97,8 +161,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:8080",
 	BasePath:         "/v1",
 	Schemes:          []string{},
-	Title:            "Golang dealer APP",
-	Description:      "Documentation",
+	Title:            "Farmish APP",
+	Description:      "Dostonbek Soliyev, Nodirbek No'monov",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

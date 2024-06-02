@@ -22,6 +22,7 @@ func newAnimalRoutes(handler *gin.RouterGroup, t usecase.Animal, l logger.Interf
 	h := handler.Group("/animal")
 	{
 		h.POST("/create", r.CreateAnimal)
+		h.PUT("/update/:id", r.UpdateAnimal)
 	}
 }
 
@@ -31,10 +32,10 @@ func newAnimalRoutes(handler *gin.RouterGroup, t usecase.Animal, l logger.Interf
 // @Tags  	    animal
 // @Accept      json
 // @Produce     json
-// @Param       request body models.LoginRequest true "Admin credentials for logging in"
-// @Success     200 {object} models.LoginResponse
+// @Param       request body models.CreateAnimalRequest true "Admin credentials for logging in"
+// @Success     200 {object} entity.Animal
 // @Failure     500 {object} response
-// @Router      /admin/login [post]
+// @Router      /animal/create [post]
 func (r *animalRoutes) CreateAnimal(c *gin.Context) {
 	var (
 		body models.CreateAnimalRequest
@@ -62,41 +63,41 @@ func (r *animalRoutes) CreateAnimal(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-//
-//// @Summary     Translate
-//// @Description Translate a text
-//// @ID          do-translate
-//// @Tags  	    translation
-//// @Accept      json
-//// @Produce     json
-//// @Param       request body doTranslateRequest true "Set up translation"
-//// @Success     200 {object} entity.Translation
-//// @Failure     400 {object} response
-//// @Failure     500 {object} response
-//// @Router      /translation/do-translate [post]
-//func (r *translationRoutes) doTranslate(c *gin.Context) {
-//	var request doTranslateRequest
-//	if err := c.ShouldBindJSON(&request); err != nil {
-//		r.l.Error(err, "http - v1 - doTranslate")
-//		errorResponse(c, http.StatusBadRequest, "invalid request body")
-//
-//		return
-//	}
-//
-//	translation, err := r.t.Translate(
-//		c.Request.Context(),
-//		entity.Translation{
-//			Source:      request.Source,
-//			Destination: request.Destination,
-//			Original:    request.Original,
-//		},
-//	)
-//	if err != nil {
-//		r.l.Error(err, "http - v1 - doTranslate")
-//		errorResponse(c, http.StatusInternalServerError, "translation service problems")
-//
-//		return
-//	}
-//
-//	c.JSON(http.StatusOK, translation)
-//}
+// @Summary     Update Animal
+// @Description Api for updating animal
+// @ID          animal-update
+// @Tags  	    animal
+// @Accept      json
+// @Produce     json
+// @Param id path string true "Animal ID"
+// @Param       request body models.CreateAnimalRequest true "Admin credentials for logging in"
+// @Success     200 {object} entity.Animal
+// @Failure     500 {object} response
+// @Router      /animal/update/{id} [put]
+func (r *animalRoutes) UpdateAnimal(c *gin.Context) {
+	var (
+		body models.CreateAnimalRequest
+	)
+
+	if err := c.ShouldBindJSON(&body); err != nil {
+		r.l.Error(err, "http - v1 - update-animal")
+		errorResponse(c, http.StatusBadRequest, "request body is not matching")
+	}
+
+	id := c.Param("id")
+	response, err := r.t.UpdateAnimal(c.Request.Context(), &entity.Animal{
+		ID:       id,
+		Name:     body.Name,
+		Weight:   body.Weight,
+		IsHungry: body.IsHungry,
+	})
+
+	if err != nil {
+		r.l.Error(err, "http - v1 - update-animal")
+		errorResponse(c, http.StatusInternalServerError, "database problems")
+
+		return
+	}
+
+	c.JSON(http.StatusOK, response)
+}

@@ -6,10 +6,7 @@ import (
 	"context"
 
 	"github.com/Masterminds/squirrel"
-	"github.com/pkg/errors"
 )
-
-const _defaultEntityCap = 64
 
 type AnimalRepo struct {
 	*postgres.Postgres
@@ -29,7 +26,7 @@ func (r *AnimalRepo) CreateAnimal(ctx context.Context, request *entity.Animal) (
 		"id":     request.ID,
 	}
 
-	sql, _, err := r.Builder.Insert("animals").
+	sql, args, err := r.Builder.Insert("animals").
 		SetMap(data).
 		Suffix("RETURNING id, name, weight").
 		ToSql()
@@ -37,7 +34,7 @@ func (r *AnimalRepo) CreateAnimal(ctx context.Context, request *entity.Animal) (
 		return nil, err
 	}
 
-	row := r.Pool.QueryRow(ctx, sql)
+	row := r.Pool.QueryRow(ctx, sql, args...)
 
 	if err := row.Scan(&response.ID, &response.Name, &response.Weight); err != nil {
 		return nil, err
@@ -51,7 +48,7 @@ func (r *AnimalRepo) GetAnimalByID(ctx context.Context, request string) (*entity
 		response entity.Animal
 	)
 
-	sql, _, err := r.Builder.Select("id", "name", "weight", "is_hungry").
+	sql, args, err := r.Builder.Select("id", "name", "weight", "is_hungry").
 		From("animals").
 		Where(squirrel.Eq{"id": request}).
 		ToSql()
@@ -59,7 +56,7 @@ func (r *AnimalRepo) GetAnimalByID(ctx context.Context, request string) (*entity
 		return nil, err
 	}
 
-	row := r.Pool.QueryRow(ctx, sql)
+	row := r.Pool.QueryRow(ctx, sql, args...)
 
 	if err := row.Scan(&response.ID, &response.Name, &response.Weight); err != nil {
 		return nil, err
@@ -80,8 +77,9 @@ func (r *AnimalRepo) UpdateAnimal(ctx context.Context, request *entity.Animal) (
 		"is_hungry": request.IsHungry,
 	}
 
-	sql, _, err := r.Builder.Update("animals").
+	sql, args, err := r.Builder.Update("animals").
 		SetMap(data).
+		Suffix("RETURNING id, name, weight, is_hungry").
 		Where(squirrel.Eq{"id": request.ID}).
 		ToSql()
 
@@ -89,9 +87,9 @@ func (r *AnimalRepo) UpdateAnimal(ctx context.Context, request *entity.Animal) (
 		return nil, err
 	}
 
-	row := r.Pool.QueryRow(ctx, sql)
+	row := r.Pool.QueryRow(ctx, sql, args...)
 
-	if err := row.Scan(&response.ID, &response.Name, &response.Weight); err != nil {
+	if err := row.Scan(&response.ID, &response.Name, &response.Weight, &response.IsHungry); err != nil {
 		return nil, err
 	}
 
@@ -104,8 +102,8 @@ func (r *AnimalRepo) DeleteAnimal(ctx context.Context, id string) (*entity.Anima
 	)
 
 	sql, _, err := r.Builder.Delete("animals").
+		Prefix(" RETURNING id, name, weight, is_hungry").
 		Where(squirrel.Eq{"id": id}).
-		Prefix("RETURNING id, name, weight, is_hungry").
 		ToSql()
 
 	if err != nil {
@@ -121,15 +119,48 @@ func (r *AnimalRepo) DeleteAnimal(ctx context.Context, id string) (*entity.Anima
 	return &response, nil
 }
 
-// func (r *AnimalRepo) GetAllAnimalsByFields(ctx context.Context, request map[string]interface{}) ([]entity.Animal, error) {
-// 	var (
-// 		response []entity.Animal
-// 	)
+func (r *AnimalRepo) GetAllAnimalsByFields(ctx context.Context, request map[string]interface{}) ([]entity.Animal, error) {
+	var (
+		response []entity.Animal
+		builder  squirrel.SelectBuilder
+	)
 
-// 	if len(request) == 0 {
-// 		r.Builder.Select()
-// 	}
+	if len(request) == 0 {
+		builder = r.Builder.Select("animals")
+	} else {
+		builder := r.Builder.Select("animals").
+			Where(squirrel.And{})
 
-// 	sql, _, err := r.Builder.Select("animals").
-		
-// }
+		for key, value := range request {
+			builder = builder.Where(squirrel.Eq{
+				key: value,
+			})
+		}
+	}
+
+	sql, _, err := builder.ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	rows, err := r.Pool.Query(ctx, sql)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var animal entity.Animal
+		if err := rows.Scan(&animal.ID, &animal.Name, &animal.Weight, &animal.IsHungry); err != nil {
+			return nil, err
+		}
+
+		response = append(response, animal)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
