@@ -1,14 +1,14 @@
 package v1
 
 import (
-	"github.com/evrone/go-clean-template/internal/controller/http/models"
+	"Farmish/internal/controller/http/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/evrone/go-clean-template/internal/entity"
-	"github.com/evrone/go-clean-template/internal/usecase"
-	"github.com/evrone/go-clean-template/pkg/logger"
+	"Farmish/internal/entity"
+	"Farmish/internal/usecase"
+	"Farmish/pkg/logger"
 )
 
 type adminRoutes struct {

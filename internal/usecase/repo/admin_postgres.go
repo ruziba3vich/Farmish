@@ -1,10 +1,11 @@
 package repo
 
 import (
+	"Farmish/pkg/postgres"
 	"context"
 	"fmt"
+
 	"github.com/Masterminds/squirrel"
-	"github.com/evrone/go-clean-template/pkg/postgres"
 )
 
 const _defaultEntityCap = 64

@@ -1,15 +1,16 @@
 package usecase
 
 import (
+	"Farmish/config"
+	tokens "Farmish/pkg/token"
 	"context"
 	"fmt"
-	"github.com/evrone/go-clean-template/config"
-	tokens "github.com/evrone/go-clean-template/pkg/token"
-	"github.com/go-redis/redis/v8"
-	"github.com/k0kubun/pp"
 	"time"
 
-	"github.com/evrone/go-clean-template/internal/entity"
+	"github.com/go-redis/redis/v8"
+	"github.com/k0kubun/pp"
+
+	"Farmish/internal/entity"
 )
 
 // AdminUseCase -.

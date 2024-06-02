@@ -1,7 +1,8 @@
 package redis
 
 import (
-	"github.com/evrone/go-clean-template/config"
+	"Farmish/config"
+
 	"github.com/go-redis/redis/v8"
 )
 

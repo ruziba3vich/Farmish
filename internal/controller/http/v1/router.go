@@ -2,11 +2,12 @@
 package v1
 
 import (
-	"github.com/casbin/casbin/v2"
-	"github.com/evrone/go-clean-template/config"
-	"github.com/evrone/go-clean-template/internal/controller/middleware"
-	tokens "github.com/evrone/go-clean-template/pkg/token"
+	"Farmish/config"
+	"Farmish/internal/controller/middleware"
+	tokens "Farmish/pkg/token"
 	"net/http"
+
+	"github.com/casbin/casbin/v2"
 
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -14,9 +15,9 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 
 	// Swagger docs.
-	_ "github.com/evrone/go-clean-template/docs"
-	"github.com/evrone/go-clean-template/internal/usecase"
-	"github.com/evrone/go-clean-template/pkg/logger"
+	_ "Farmish/docs"
+	"Farmish/internal/usecase"
+	"Farmish/pkg/logger"
 )
 
 // NewRouter -.

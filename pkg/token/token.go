@@ -1,7 +1,7 @@
 package tokens
 
 import (
-	"github.com/evrone/go-clean-template/config"
+	"Farmish/config"
 	"log"
 	"time"
 

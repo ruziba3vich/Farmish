@@ -3,12 +3,12 @@ package middleware
 import (
 	// "fmt"
 
-	"github.com/evrone/go-clean-template/config"
-	"github.com/evrone/go-clean-template/pkg/logger"
+	"Farmish/config"
+	"Farmish/pkg/logger"
 	"log"
 	"net/http"
 
-	jWT "github.com/evrone/go-clean-template/pkg/token"
+	jWT "Farmish/pkg/token"
 
 	"github.com/casbin/casbin/v2"
 	"github.com/dgrijalva/jwt-go"

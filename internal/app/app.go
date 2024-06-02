@@ -2,22 +2,23 @@
 package app
 
 import (
+	"Farmish/pkg/redis"
 	"fmt"
-	"github.com/casbin/casbin/v2"
-	"github.com/evrone/go-clean-template/pkg/redis"
 	"os"
 	"os/signal"
 	"syscall"
 
+	"github.com/casbin/casbin/v2"
+
 	"github.com/gin-gonic/gin"
 
-	"github.com/evrone/go-clean-template/config"
-	v1 "github.com/evrone/go-clean-template/internal/controller/http/v1"
-	"github.com/evrone/go-clean-template/internal/usecase"
-	"github.com/evrone/go-clean-template/internal/usecase/repo"
-	"github.com/evrone/go-clean-template/pkg/httpserver"
-	"github.com/evrone/go-clean-template/pkg/logger"
-	"github.com/evrone/go-clean-template/pkg/postgres"
+	"Farmish/config"
+	v1 "Farmish/internal/controller/http/v1"
+	"Farmish/internal/usecase"
+	"Farmish/internal/usecase/repo"
+	"Farmish/pkg/httpserver"
+	"Farmish/pkg/logger"
+	"Farmish/pkg/postgres"
 )
 
 // Run creates objects via constructors.
