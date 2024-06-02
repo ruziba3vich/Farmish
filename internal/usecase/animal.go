@@ -6,6 +6,8 @@ import (
 	"context"
 	"errors"
 
+	"github.com/google/uuid"
+
 	"github.com/go-redis/redis/v8"
 )
 
@@ -26,8 +28,13 @@ func NewAnimalUseCase(r AnimalRepo, cfg *config.Config, RedisClient *redis.Clien
 }
 
 func (uc *AnimalUseCase) CreateAnimal(ctx context.Context, request *entity.Animal) (*entity.Animal, error) {
-	//iplement here
-	return nil, errors.New("unimplemented usecase createanimal")
+	request.ID = uuid.NewString()
+	response, err := uc.repo.CreateAnimal(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
 }
 
 func (uc *AnimalUseCase) GetAnimalByID(ctx context.Context, id string) (*entity.Animal, error) {

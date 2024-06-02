@@ -7,9 +7,11 @@ require (
 	github.com/Masterminds/squirrel v1.5.2
 	github.com/casbin/casbin/v2 v2.89.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/docker/distribution v2.7.1+incompatible
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/golang-migrate/migrate/v4 v4.15.1
+	github.com/google/uuid v1.3.0
 	github.com/ilyakaznacheev/cleanenv v1.2.6
 	github.com/jackc/pgx/v4 v4.14.1
 	github.com/pkg/errors v0.9.1

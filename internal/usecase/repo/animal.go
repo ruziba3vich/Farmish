@@ -19,8 +19,30 @@ func NewAnimalRepo(pg *postgres.Postgres) *AnimalRepo {
 }
 
 func (r *AnimalRepo) CreateAnimal(ctx context.Context, request *entity.Animal) (*entity.Animal, error) {
-	//implement here
-	return nil, errors.New("unimplemented method - CreateAnimal")
+	var (
+		response entity.Animal
+	)
+	data := map[string]interface{}{
+		"name":   request.Name,
+		"weight": request.Weight,
+		"id":     request.ID,
+	}
+
+	sql, _, err := r.Builder.Insert("animals").
+		SetMap(data).
+		Suffix("RETURNING id, name, weight").
+		ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	row := r.Pool.QueryRow(ctx, sql)
+
+	if err := row.Scan(&response.ID, &response.Name, &response.Weight); err != nil {
+		return nil, err
+	}
+
+	return &response, nil
 }
 
 func (r *AnimalRepo) GetAnimalByID(ctx context.Context, request string) (*entity.Animal, error) {
