@@ -2,9 +2,12 @@ package v1
 
 import (
 	"Farmish/internal/controller/http/models"
-	"net/http"
-
+	"context"
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
+	"github.com/k0kubun/pp"
+	"net/http"
+	"time"
 
 	"Farmish/internal/entity"
 	"Farmish/internal/usecase"
@@ -16,13 +19,20 @@ type animalRoutes struct {
 	l logger.Interface
 }
 
+type animalWebsocketRoutes struct {
+	t usecase.Animal
+	l logger.Interface
+}
+
 func newAnimalRoutes(handler *gin.RouterGroup, t usecase.Animal, l logger.Interface) {
 	r := &animalRoutes{t, l}
+	//rws := &animalWebsocketRoutes{}
 
 	h := handler.Group("/animal")
 	{
 		h.POST("/create", r.CreateAnimal)
 		h.PUT("/update/:id", r.UpdateAnimal)
+		h.GET("/ws/notify", r.CheckHungryStatusOfAnimal)
 	}
 }
 
@@ -100,4 +110,71 @@ func (r *animalRoutes) UpdateAnimal(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, response)
+}
+
+func (rws *animalRoutes) CheckHungryStatusOfAnimal(c *gin.Context) {
+	// Upgrade HTTP request to WebSocket connection
+	upgrader := websocket.Upgrader{}
+	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
+	if err != nil {
+		rws.l.Error(err, "websocket upgrade failed")
+		return
+	}
+	defer conn.Close()
+
+	// Create a timer for notification checks
+	// timer := time.NewTimer(time.Second * 5)
+
+	// for {
+	// 	select {
+	// 	case <-timer.C:
+	// 		// Every 5 seconds, check animal status and send notification
+	// 		result, err := rws.t.NotifyAnimalStatus(c.Request.Context())
+	// 		if err != nil {
+	// 			rws.l.Error(err, "http - v1 - notify status animal")
+	// 			errorResponse(c, http.StatusInternalServerError, "database problems")
+	// 			continue
+	// 		}
+	// 		err = conn.WriteJSON(result) // Send notification data as JSON
+	// 		if err != nil {
+	// 			rws.l.Error(err, "failed to send animal status update")
+	// 		}
+	// 		// Reset the timer for the next check
+	// 		timer.Reset(time.Second * 5)
+	//   case msgType, msg, ok := <-conn.ReadMessage():
+	// 	// Handle incoming messages from client (optional)
+	// 	if !ok {
+	// 	  // Connection closed, handle cleanup
+	// 	  return
+	// 	}
+	// Process received message based on msgType and msg
+	// case err := <-conn.ReadPong():
+	// 	if err != nil {
+	// 		// Handle pong error
+	// 	}
+	// }
+	// }
+
+	for {
+		result, err := rws.t.NotifyAnimalStatus(context.Background())
+		if err != nil {
+			rws.l.Error(err, "http - v1 - notify status animal")
+			errorResponse(c, http.StatusInternalServerError, "database problems")
+		}
+
+		if result != nil {
+			err := conn.WriteJSON(result)
+			if err != nil {
+				pp.Println(err)
+			}
+			if err != nil {
+				rws.l.Error(err, "failed to send animal status update")
+			}
+		} else {
+			pp.Println("No animal status update available")
+		}
+
+		time.Sleep(time.Second * 5)
+
+	}
 }

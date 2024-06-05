@@ -3,8 +3,6 @@ package v1
 
 import (
 	"Farmish/config"
-	"Farmish/internal/controller/middleware"
-	tokens "Farmish/pkg/token"
 	"net/http"
 
 	"github.com/casbin/casbin/v2"
@@ -32,10 +30,10 @@ func NewRouter(handler *gin.Engine, l logger.Interface, t usecase.Animal, e *cas
 	handler.Use(gin.Logger())
 	handler.Use(gin.Recovery())
 
-	jwtHandler := tokens.JWTHandler{
-		SigninKey: cfg.Casbin.SigningKey,
-	}
-	handler.Use(middleware.NewAuthorizer(e, jwtHandler, cfg, l))
+	// jwtHandler := tokens.JWTHandler{
+	// 	SigninKey: cfg.Casbin.SigningKey,
+	// }
+	// handler.Use(middleware.NewAuthorizer(e, jwtHandler, cfg, l))
 
 	// Swagger
 	swaggerHandler := ginSwagger.DisablingWrapHandler(swaggerFiles.Handler, "DISABLE_SWAGGER_HTTP_HANDLER")

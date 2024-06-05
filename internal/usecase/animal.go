@@ -45,3 +45,7 @@ func (uc *AnimalUseCase) DeleteAnimal(ctx context.Context, id string) (*entity.A
 func (uc *AnimalUseCase) GetAllAnimalsByFields(ctx context.Context, filter map[string]interface{}) ([]entity.Animal, error) {
 	return uc.repo.GetAllAnimalsByFields(ctx, filter)
 }
+
+func (uc *AnimalUseCase) NotifyAnimalStatus(ctx context.Context) ([]entity.AnimalHungryReponse, error) {
+	return uc.repo.CheckHungryStatusOfAnimals(ctx)
+}

@@ -16,6 +16,7 @@ type (
 		UpdateAnimal(context.Context, *entity.Animal) (*entity.Animal, error)
 		DeleteAnimal(context.Context, string) (*entity.Animal, error)
 		GetAllAnimalsByFields(context.Context, map[string]interface{}) ([]entity.Animal, error)
+		NotifyAnimalStatus(ctx context.Context) ([]entity.AnimalHungryReponse, error)
 	}
 
 	AnimalRepo interface {
@@ -24,5 +25,6 @@ type (
 		UpdateAnimal(context.Context, *entity.Animal) (*entity.Animal, error)
 		DeleteAnimal(context.Context, string) (*entity.Animal, error)
 		GetAllAnimalsByFields(context.Context, map[string]interface{}) ([]entity.Animal, error)
+		CheckHungryStatusOfAnimals(ctx context.Context) ([]entity.AnimalHungryReponse, error)
 	}
 )

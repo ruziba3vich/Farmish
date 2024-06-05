@@ -3,3 +3,4 @@ p, unauthorized, /swagger/index.html, GET
 p, unauthorized, /swagger/index.html, POST
 p, unauthorized, /v1/animal/create, POST
 p, unauthorized, /v1/animal/update/{id}, PUT
+p, unauthorized, /v1/animal/ws, GET

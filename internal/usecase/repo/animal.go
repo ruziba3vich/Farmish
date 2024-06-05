@@ -4,6 +4,7 @@ import (
 	"Farmish/internal/entity"
 	"Farmish/pkg/postgres"
 	"context"
+	"github.com/k0kubun/pp"
 
 	"github.com/Masterminds/squirrel"
 )
@@ -163,4 +164,35 @@ func (r *AnimalRepo) GetAllAnimalsByFields(ctx context.Context, request map[stri
 	}
 
 	return response, nil
+}
+
+func (r *AnimalRepo) CheckHungryStatusOfAnimals(ctx context.Context) ([]entity.AnimalHungryReponse, error) {
+	var (
+		animal   entity.AnimalHungryReponse
+		animals  []entity.AnimalHungryReponse
+		IsHungry bool
+	)
+	sql, args, err := r.Builder.Select("id, name, is_hungry").
+		From("animals").
+		ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	rows, err := r.Pool.Query(ctx, sql, args...)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		if err := rows.Scan(&animal.ID, &animal.Name, &IsHungry); err != nil {
+			return nil, err
+		}
+		pp.Println(animal)
+		if IsHungry {
+			animals = append(animals, animal)
+		}
+	}
+
+	return animals, nil
 }

@@ -6,3 +6,8 @@ type Animal struct {
 	Weight   float64 `json:"weight" example:"56.9"`
 	IsHungry bool    `json:"is_hungry" example:"true"`
 }
+
+type AnimalHungryReponse struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
